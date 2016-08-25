@@ -1,0 +1,58 @@
+{
+  "strict": "global",
+  "globals": {
+    // Angular
+    "angular": false,
+
+    // Angular mocks
+    "module": false,
+    "inject": false,
+
+    // Jasmine
+    "jasmine": false,
+    "describe": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "it": false,
+    "expect": false,
+
+    // Protractor
+    "browser": false,
+    "element": false,
+    "by": false,
+
+    //nodejs
+    "require": false
+  },
+  "esversion": 6,
+  "bitwise": true,
+  "camelcase": true,
+  "curly": true,
+  "devel": true,
+  "eqeqeq": true,
+  "es3": false,
+  "esnext": true,
+  "forin": false,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "maxcomplexity": 10,
+  "maxdepth": 8,
+  "maxlen": 256,
+  "maxparams": 10,
+  "maxstatements": 100,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "plusplus": false,
+  "quotmark": "single",
+  "regexp": true,
+  "smarttabs": true,
+  "strict": true,
+  "sub": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true
+}
+

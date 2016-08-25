@@ -1,0 +1,5 @@
+{
+  "disallowMultipleVarDecl": false,
+  "requireSpaceAfterKeywords": false,
+  "maximumLineLength": 150
+}
