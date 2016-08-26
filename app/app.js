@@ -2,16 +2,11 @@
 var perform;
 // Declare app level module which depends on views, and components
 angular.module('myApp', ['ui.router', 'ngResource', 'pascalprecht.translate'])
-  .constant('SETTINGS', {
-    api: {
-      url: 'http://internal-dev-investments.mmiholdings.com/babelfish/api/v1/'
-    }
-  })
   .config(config)
   .run(run);
 
-config.$inject = ['$httpProvider', 'mySaviorProvider', 'SETTINGS', '$stateProvider', '$translateProvider', '$urlRouterProvider'];
-function config($httpProvider, saver, settings, $stateProvider, $translateProvider, $urlRouterProvider) {
+config.$inject = ['$httpProvider', 'mySaviorProvider', '$stateProvider', '$translateProvider', '$urlRouterProvider'];
+function config($httpProvider, saver, $stateProvider, $translateProvider, $urlRouterProvider) {
   $httpProvider.defaults.withCredentials = false;
   saver.use('memory');
 
@@ -22,9 +17,10 @@ function config($httpProvider, saver, settings, $stateProvider, $translateProvid
       template: '<ui-view></ui-view>'
     });
   $urlRouterProvider.otherwise('/home');
-  //Translation
-  $translateProvider.useLoader('translationLoader', {provider: 'reg28TableDescription'});
-  // $translateProvider.useUrlLoader(settings.api.url + 'language/reg28TableDescription', {});
+
+  //Translation:
+  //@description: translationLoader is a service that will call each time there is a lang change
+  $translateProvider.useLoader('translationLoader', {component: 'reg28TableDescription'});
   $translateProvider.preferredLanguage('en');
   $translateProvider.useSanitizeValueStrategy(null);
   perform = performance.now();
@@ -35,18 +31,13 @@ function run($rootScope, $timeout, $translate) {
   $timeout(function() {
     $translate.use('en');
   });
-  $rootScope.$on('$translateReady', function(result) {
-    console.log('$translateReady', result);
-  });
-  $rootScope.$on('$translateLoadingSuccess', function(result, data) {
-    console.log('$translateLoadingSuccess', result, data, performance.now() - perform, $translate.getAvailableLanguageKeys());
+
+  $rootScope.$on('$translateLoadingSuccess', function(e, data) {
+    console.info('Translation Loading Success', data, performance.now() - perform);
   });
 
   function languageChange(key) {
     $translate.use(key);
   }
-  function belongChange(key) {
-    $translate.refresh();
-  }
-  $rootScope.call = {languageChange: languageChange, belongChange: belongChange};
+  $rootScope.call = {languageChange: languageChange};
 }

@@ -5,34 +5,52 @@
   translationLoader.$inject = ['myResource', 'mySavior', '$rootScope', '$translate'];
   function translationLoader(resource, saver, $rootScope, $translate) {
 
-    function loader(options) {
-      console.log('options', options);
+    /**
+     * loader is the service/factory that the language api will call when ever there is a lang change
 
-      loader.provider = loader.provider || options.provider;
+     * @param {object} options
+     * @param {string} options.key
+     * @param {object} options.$http
+     * @param {string} options.component
+     * @returns {*}
+     */
+    function loader(options) {
+      loader.component   = loader.component || options.component;
       var savedLanguage = saver.get('languages');
+      //We make use of a caching service to prevent call to the server.
       if(savedLanguage && !loader.isNew) {
-        console.info('Using saved language');
         $rootScope.$broadcast('savedLanguage');
         return Promise.resolve(savedLanguage[options.key]);
       }
 
-      return resource.init('/language/:provider').get({provider: loader.provider}).$promise.then(function(response) {
+      return resource.init('/language/:component').get({component: loader.component}).$promise.then(function(response) {
         saver.set('languages', response);
         $rootScope.$broadcast('savedLanguage');
-        return response[options.key];
+        return response[options.key] || response;
       });
     }
-    loader.prototype.newProvider = function newProvider() {};
-    loader.__proto__.changeProvider = function(provider) {
-      loader.isNew    = (provider !== loader.provider);
-      loader.provider = provider;
+
+    /**
+     * An extention of the loader. Adds the ability to change components.
+     * This will over write the language module table
+
+     * @param {string} component
+     */
+    loader.__proto__.changecomponent = function(component) {
+      loader.isNew    = (component !== loader.component);
+      loader.component = component;
       $translate.refresh();
     };
 
-    Object.defineProperty(loader, 'provider', {
-      value: null,
-      writable: true
-    });
+    /**
+     * Set the properties for component and isNew
+     * @type {{component: {value: null, writable: boolean}, isNew: {value: boolean, writable: boolean}}}
+     */
+    var properties = {
+      component: {value: null, writable: true},
+      isNew: {value: false, writable: true}
+    };
+    Object.defineProperties(loader, properties);
 
     return loader;
   }

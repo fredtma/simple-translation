@@ -1,3 +1,7 @@
+/**
+ * This is a wrapper for ngResource.
+ * You simply init the URL and set the different action.
+ */
 (function() {
   'use strict';
   angular.module('myApp')
