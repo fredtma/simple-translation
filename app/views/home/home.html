@@ -1,3 +1,27 @@
-<h3>Home</h3>
+<h1>Home</h1>
+<div class="btn-group">
+  <button class="btn btn-success" ng-click="$ctrl.call.changeProvider('wms')">WMS</button>
+  <button class="btn btn-success" ng-click="$ctrl.call.changeProvider('reg28TableDescription')">Reg28 Table Description</button>
+</div>
 <hr/>
-<p ng-repeat="(key, value) in $ctrl.languages.en" translate="{{key}}"></p>
+
+<div ng-repeat="(namespaceKey, namespace) in $ctrl.languages.en" translate-namespace="{{namespaceKey}}">
+  <h2 ng-bind="namespaceKey"></h2>
+  <hr/>
+
+  <div ng-if="namespace|varType:'object'" ng-repeat="(subKey, subnamespace) in namespace track by $index" translate-namespace=".{{subKey}}">
+    <h3 ng-bind="subKey"></h3>
+
+    <p ng-if="subnamespace|varType:'object'" ng-repeat="(key, value) in subnamespace track by $index" translate=".{{key}}">
+    </p>
+
+    <div ng-if="subnamespace|varType:'string'">
+      <p translate="{{subKey}}"></p>
+    </div>
+  </div>
+
+  <div ng-if="namespace|varType:'string'">
+    <p translate="{{namespaceKey}}"></p>
+  </div>
+
+</div>

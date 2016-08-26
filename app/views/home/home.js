@@ -16,14 +16,19 @@
     });
   }
 
-  homeCtrl.$inject = ['mySavior', '$scope'];
-  function homeCtrl(saver, $scope) {
-    var self = this;
+  homeCtrl.$inject = ['mySavior', '$scope', 'translationLoader'];
+  function homeCtrl(saver, $scope, translationLoader) {
+    var self  = this;
+    self.call = {changeProvider: translationLoader.changeProvider};
 
-    $scope.$on('savedLanguage', function() {
+    $scope.$on('savedLanguage', getLanguage);
+
+    function getLanguage() {
       var savedLanguage = saver.get('languages');
-      console.log('savedLanguage', savedLanguage);
-      self.languages = {'en': savedLanguage.en, 'af': savedLanguage.af};
-    });
+      if(savedLanguage) {
+        self.languages = {'en': savedLanguage.en, 'af': savedLanguage.af};
+      }
+    }
+    getLanguage();
   }
 })();
